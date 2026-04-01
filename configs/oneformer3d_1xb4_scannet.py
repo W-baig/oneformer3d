@@ -222,7 +222,7 @@ param_scheduler = dict(type='PolyLR', begin=0, end=512, power=0.9)
 
 custom_hooks = [dict(type='EmptyCacheHook', after_iter=True)]
 default_hooks = dict(
-    checkpoint=dict(interval=1, max_keep_ckpts=16))
+    checkpoint=dict(interval=1, max_keep_ckpts=8))
 
 load_from = 'work_dirs/tmp/sstnet_scannet.pth'
 

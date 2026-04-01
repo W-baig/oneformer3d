@@ -3,8 +3,9 @@
 import os
 
 import mmengine
+import numpy as np
 
-from scannet_data_utils import ScanNetData
+from scannet_data_utils import ScanNetData, ScanNetSegData
 
 
 def create_indoor_info_file(data_path,
@@ -65,3 +66,21 @@ def create_indoor_info_file(data_path,
         num_workers=workers, has_label=False)
     mmengine.dump(infos_test, test_filename, 'pkl')
     print(f'{pkl_prefix} info test file is saved to {test_filename}')
+
+    # generate infos for semantic segmentation task
+    if pkl_prefix == 'scannet':
+        train_seg_dataset = ScanNetSegData(
+            data_root=data_path,
+            ann_file=train_filename,
+            split='train',
+            num_points=8192,
+            label_weight_func=lambda x: 1.0 / np.log(1.2 + x))
+        train_seg_dataset.get_seg_infos()
+
+        val_seg_dataset = ScanNetSegData(
+            data_root=data_path,
+            ann_file=val_filename,
+            split='val',
+            num_points=8192,
+            label_weight_func=lambda x: 1.0 / np.log(1.2 + x))
+        val_seg_dataset.get_seg_infos()
